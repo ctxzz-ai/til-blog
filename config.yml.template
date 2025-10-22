@@ -1,0 +1,11 @@
+repos:
+  - /path/to/repo1
+  - /path/to/repo2
+output_dir: site/content/posts
+state_file: state.json
+# OPENAI_API_KEY should be set as environment variable
+# Hugo site configuration
+site_dir: site
+theme: ananke
+# Update baseURL to your site URL
+baseURL: https://example.com/

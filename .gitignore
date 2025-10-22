@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.env
+config.yml
+til_posts/
+state.json
+# Hugo generated files
+site/public/
+# Hugo generated files
+site/public/
