@@ -1,4 +1,8 @@
-baseURL = "https://example.com/"
+baseURL = "https://ctxzz-ai.github.io/til-blog/"
 languageCode = "en-us"
 title = "TIL Blog"
 theme = "ananke"
+
+[module]
+  [[module.imports]]
+    path = "github.com/theNewDynamic/gohugo-theme-ananke"
