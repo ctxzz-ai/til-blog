@@ -24,7 +24,7 @@ class Summarizer:
         prompt = "\n\n".join(prompt_sections)
         # Call OpenAI API to generate summary
         response = openai.Completion.create(
-            engine="gpt-5-mini",
+            engine="text-davinci-003",
             prompt=prompt,
             max_tokens=300,
             temperature=0.5,
