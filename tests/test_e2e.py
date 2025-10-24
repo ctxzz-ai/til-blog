@@ -2,7 +2,6 @@ import os
 import sys
 import json
 import yaml
-import openai
 from types import SimpleNamespace
 from git import Repo
 from til_blog.main import main
@@ -30,9 +29,18 @@ def test_full_flow(tmp_path, monkeypatch):
     config_path.write_text(yaml.safe_dump(config))
     # Monkeypatch openai API and env
     monkeypatch.setenv('OPENAI_API_KEY', 'test')
-    def dummy_create(engine, prompt, max_tokens, temperature):
-        return SimpleNamespace(choices=[SimpleNamespace(text='Test summary')])
-    monkeypatch.setattr(openai.Completion, 'create', dummy_create)
+    class DummyResponses:
+        def create(self, *, model, input, max_output_tokens, temperature):
+            return SimpleNamespace(
+                output=[SimpleNamespace(type="output_text", text="Test summary")],
+                output_text="Test summary",
+            )
+
+    class DummyOpenAI:
+        def __init__(self, api_key=None):
+            self.responses = DummyResponses()
+
+    monkeypatch.setattr('til_blog.summarizer.OpenAI', DummyOpenAI)
     # Run main in tmp cwd
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr(sys, 'argv', ['prog', '--config', str(config_path)])
