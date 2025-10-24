@@ -1,5 +1,4 @@
 import pytest
-import openai
 from types import SimpleNamespace
 from til_blog.summarizer import Summarizer
 
@@ -30,20 +29,26 @@ def test_summarize_with_commits(monkeypatch):
 
     # Capture parameters
     captured = {}
-    def dummy_create(engine, prompt, max_tokens, temperature):
-        captured['engine'] = engine
-        captured['prompt'] = prompt
-        captured['max_tokens'] = max_tokens
-        captured['temperature'] = temperature
-        return SimpleNamespace(choices=[SimpleNamespace(text="  Summarized output  ")])
+    class DummyResponses:
+        def create(self, *, model, input, max_output_tokens, temperature):
+            captured['model'] = model
+            captured['prompt'] = input
+            captured['max_output_tokens'] = max_output_tokens
+            captured['temperature'] = temperature
+            return SimpleNamespace(
+                output=[SimpleNamespace(type="output_text", text="  Summarized output  ")],
+                output_text="  Summarized output  ",
+            )
 
-    # Monkeypatch OpenAI API
-    monkeypatch.setattr(openai.Completion, 'create', dummy_create)
+    class DummyClient(SimpleNamespace):
+        def __init__(self):
+            super().__init__(responses=DummyResponses())
 
     s = Summarizer(api_key="test_key")
+    s.client = DummyClient()
     result = s.summarize(commits)
 
     assert result == "Summarized output"
-    assert captured['engine'] == "text-davinci-003"
+    assert captured['model'] == "gpt-4o-mini"
     assert "abc123: dummy diff" in captured['prompt']
     assert 'Test commit message' not in captured['prompt']  # diff includes hexsha only
