@@ -1,6 +1,7 @@
 import os
 import json
 from git import Repo
+from git.exc import NoSuchPathError, InvalidGitRepositoryError
 
 class RepoTracker:
     def __init__(self, config):
@@ -26,9 +27,20 @@ class RepoTracker:
     def get_new_commits(self):
         new_commits = []
         for path in self.discover_repos():
+            if not os.path.isdir(path):
+                print(f"Repository path not found: {path}")
+                continue
+
             repo_name = os.path.basename(path)
             last = self.state.get(repo_name)
-            repo = Repo(path)
+            try:
+                repo = Repo(path)
+            except NoSuchPathError:
+                print(f"Repository path not found: {path}")
+                continue
+            except InvalidGitRepositoryError:
+                print(f"Invalid git repository: {path}")
+                continue
             commits = list(repo.iter_commits())
             commits_to_process = []
             for commit in commits:
