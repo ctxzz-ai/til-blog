@@ -1,7 +1,9 @@
 import os
 import json
+from typing import Optional, Tuple
+
 from git import Repo
-from git.exc import NoSuchPathError, InvalidGitRepositoryError
+from git.exc import GitError, NoSuchPathError, InvalidGitRepositoryError
 
 class RepoTracker:
     def __init__(self, config):
@@ -24,6 +26,25 @@ class RepoTracker:
         # For now, use configured list
         return self.repos
 
+    def _resolve_repo_entry(self, entry) -> Optional[Tuple[str, str]]:
+        path: Optional[str]
+        name: Optional[str]
+        if isinstance(entry, dict):
+            path = entry.get("path")
+            name = entry.get("name")
+        else:
+            path = entry
+            name = None
+
+        if not path:
+            print("Skipping repository entry with no path configured")
+            return None
+
+        expanded_path = os.path.expanduser(os.path.expandvars(str(path)))
+        normalized_path = os.path.abspath(expanded_path)
+        repo_name = name or os.path.basename(normalized_path.rstrip(os.sep)) or normalized_path
+        return normalized_path, repo_name
+
     def get_new_commits(self):
         new_commits = []
         for path in self.discover_repos():
@@ -31,15 +52,14 @@ class RepoTracker:
                 print(f"Repository path not found: {path}")
                 continue
 
-            repo_name = os.path.basename(path)
             last = self.state.get(repo_name)
             try:
                 repo = Repo(path)
-            except NoSuchPathError:
-                print(f"Repository path not found: {path}")
+            except (NoSuchPathError, InvalidGitRepositoryError):
+                print(f"Invalid or missing git repository: {path}")
                 continue
-            except InvalidGitRepositoryError:
-                print(f"Invalid git repository: {path}")
+            except GitError as exc:
+                print(f"Failed to open repository {path}: {exc}")
                 continue
             commits = list(repo.iter_commits())
             commits_to_process = []
