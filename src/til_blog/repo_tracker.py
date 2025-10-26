@@ -26,6 +26,10 @@ class RepoTracker:
     def get_new_commits(self):
         new_commits = []
         for path in self.discover_repos():
+            if not os.path.isdir(path):
+                print(f"Repository path not found: {path}")
+                continue
+
             repo_name = os.path.basename(path)
             last = self.state.get(repo_name)
             repo = Repo(path)
