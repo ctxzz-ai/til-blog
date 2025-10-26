@@ -18,6 +18,20 @@ def test_missing_repo_path_is_skipped(tmp_path, capsys):
     # state should remain empty because nothing was processed
     assert tracker.state == {}
 
+
+def test_missing_repo_path_is_skipped(tmp_path, capsys):
+    missing_path = tmp_path / "does_not_exist"
+    config = {"repos": [str(missing_path)], "state_file": str(tmp_path / "state.json")}
+    tracker = RepoTracker(config)
+
+    commits = tracker.get_new_commits()
+
+    assert commits == []
+    captured = capsys.readouterr()
+    assert "Repository path not found" in captured.out
+    # state should remain empty because nothing was processed
+    assert tracker.state == {}
+
 def init_test_repo(tmp_path):
     repo_dir = tmp_path / "repo"
     repo = Repo.init(str(repo_dir))
