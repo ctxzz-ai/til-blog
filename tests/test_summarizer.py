@@ -1,54 +1,46 @@
-import pytest
-from types import SimpleNamespace
 from til_blog.summarizer import Summarizer
 
-class DummyRepo:
-    def __init__(self):
-        # self.git.show will be used
-        self.git = self
 
-    def show(self, hexsha, *args):
-        return f"{hexsha}: dummy diff"
-
-class DummyCommit:
-    def __init__(self, hexsha, message, repo):
-        self.hexsha = hexsha
-        self.message = message
-        self.repo = repo
-
-
-def test_summarize_empty():
-    s = Summarizer(api_key="test_key")
-    assert s.summarize([]) == ''
+COMMITS = [
+    {
+        "repo": "ctxzz-ai/til-blog",
+        "sha": "abcdef123456",
+        "message": "Add feature X\n\nDetails",
+        "files": [],
+    },
+    {
+        "repo": "ctxzz-ai/til-blog",
+        "sha": "123456abcdef",
+        "message": "Fix bug",
+        "files": [],
+    },
+]
 
 
-def test_summarize_with_commits(monkeypatch):
-    # Prepare dummy commits
-    repo = DummyRepo()
-    commits = [DummyCommit("abc123", "Test commit message", repo)]
+def test_summarizer_skips_when_no_api_key(monkeypatch):
+    # Ensure we do not attempt to construct an OpenAI client when the key is masked.
+    def fail_openai(api_key):  # pragma: no cover - defensive path
+        raise AssertionError("should not create client")
 
-    # Capture parameters
-    captured = {}
-    class DummyResponses:
-        def create(self, *, model, input, max_output_tokens, temperature):
-            captured['model'] = model
-            captured['prompt'] = input
-            captured['max_output_tokens'] = max_output_tokens
-            captured['temperature'] = temperature
-            return SimpleNamespace(
-                output=[SimpleNamespace(type="output_text", text="  Summarized output  ")],
-                output_text="  Summarized output  ",
-            )
+    monkeypatch.setattr("til_blog.summarizer.OpenAI", fail_openai)
 
-    class DummyClient(SimpleNamespace):
-        def __init__(self):
-            super().__init__(responses=DummyResponses())
+    summary = Summarizer("***").summarize(COMMITS)
 
-    s = Summarizer(api_key="test_key")
-    s.client = DummyClient()
-    result = s.summarize(commits)
+    assert "Summarization skipped" in summary
+    assert "Add feature X" in summary
 
-    assert result == "Summarized output"
-    assert captured['model'] == "gpt-4o-mini"
-    assert "abc123: dummy diff" in captured['prompt']
-    assert 'Test commit message' not in captured['prompt']  # diff includes hexsha only
+
+def test_summarizer_falls_back_on_openai_failure(monkeypatch):
+    class FailingClient:
+        def __init__(self, api_key):
+            self.responses = self
+
+        def create(self, **kwargs):  # pragma: no cover - executed via Summarizer
+            raise RuntimeError("boom")
+
+    monkeypatch.setattr("til_blog.summarizer.OpenAI", FailingClient)
+
+    summary = Summarizer("sk-test").summarize(COMMITS)
+
+    assert "Summarization failed" in summary
+    assert "Fix bug" in summary

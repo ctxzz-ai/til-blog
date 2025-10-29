@@ -5,7 +5,8 @@
 #   - ctxzz-ai/repo1
 #   - ctxzz-ai/repo2
 
-# Example to poll an entire org (public repos only if your GH_PAT has limited scope):
+# Example to poll an entire org (public repos only if your GH_PAT has limited scope).
+# Personal accounts work too; we'll treat the value as a user if the org lookup fails.
 github_org: ctxzz-ai
 
 # Limit initial backfill: when state.json has no entry for a repo, poll only the last N days
