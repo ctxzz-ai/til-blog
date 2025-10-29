@@ -13,7 +13,7 @@ import os
 import yaml
 import json
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from til_blog.summarizer import Summarizer
 from til_blog.post_generator import PostGenerator
@@ -39,12 +39,35 @@ def save_state(path, state):
 
 
 def get_repos_from_org(org, token):
+    """Return a list of repo full_names for an organization.
+
+    If the provided token cannot access the org (e.g. token restricted or SSO enforced),
+    fall back to an unauthenticated request to list public repos only.
+    """
     repos = []
-    headers = {"Authorization": f"token {token}", "Accept": "application/vnd.github+json"}
     page = 1
+    # Prepare headers: include Authorization only if token provided
+    headers = {"Accept": "application/vnd.github+json"}
+    if token:
+        headers_auth = {**headers, "Authorization": f"token {token}"}
+    else:
+        headers_auth = headers
+
     while True:
-        r = requests.get(f"{GITHUB_API}/orgs/{org}/repos", headers=headers, params={"per_page": 100, "page": page, "type": "all"})
-        r.raise_for_status()
+        try:
+            r = requests.get(f"{GITHUB_API}/orgs/{org}/repos", headers=headers_auth, params={"per_page": 100, "page": page, "type": "all"})
+            r.raise_for_status()
+        except requests.HTTPError as e:
+            # If auth'd request returned 404 we try unauthenticated public listing as a fallback
+            status = getattr(e.response, "status_code", None)
+            if status == 404:
+                print(f"Warning: org '{org}' not accessible with provided token. Falling back to unauthenticated public repo listing.")
+                # Retry unauthenticated for public repos only
+                r = requests.get(f"{GITHUB_API}/orgs/{org}/repos", params={"per_page": 100, "page": page, "type": "public"})
+                r.raise_for_status()
+            else:
+                raise
+
         data = r.json()
         if not data:
             break
