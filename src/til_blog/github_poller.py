@@ -104,6 +104,10 @@ def main():
 
     for r in repos:
         last_date = state.get(r, {}).get("last_date")
+        # If there's no saved last_date, use since_days if configured to avoid huge backfill
+        if not last_date and config.get("since_days"):
+            since_dt = datetime.utcnow() - timedelta(days=int(config.get("since_days")))
+            last_date = since_dt.isoformat() + "Z"
         try:
             commits = list_commits(r, token, since=last_date)
         except Exception as e:

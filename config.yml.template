@@ -1,10 +1,15 @@
-# Option A: List individual GitHub repos (full_name format: owner/repo)
+# Poll GitHub configuration
+# Set either github_repos (list of owner/repo) or github_org (organization to poll)
+# Example to list specific repos:
 # github_repos:
 #   - ctxzz-ai/repo1
 #   - ctxzz-ai/repo2
 
-# Option B: Poll all repos in an org
-# github_org: ctxzz-ai
+# Example to poll an entire org (public repos only if your GH_PAT has limited scope):
+github_org: ctxzz-ai
+
+# Limit initial backfill: when state.json has no entry for a repo, poll only the last N days
+since_days: 7
 
 output_dir: site/content/posts
 state_file: state.json
