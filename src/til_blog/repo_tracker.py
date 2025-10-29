@@ -47,7 +47,13 @@ class RepoTracker:
 
     def get_new_commits(self):
         new_commits = []
-        for path in self.discover_repos():
+        for entry in self.discover_repos():
+            resolved = self._resolve_repo_entry(entry)
+            if not resolved:
+                continue
+
+            path, repo_name = resolved
+
             if not os.path.isdir(path):
                 print(f"Repository path not found: {path}")
                 continue
