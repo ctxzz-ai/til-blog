@@ -3,3 +3,4 @@ openai
 PyYAML
 Jinja2
 pytest
+requests
