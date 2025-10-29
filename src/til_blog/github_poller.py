@@ -38,36 +38,16 @@ def save_state(path, state):
         json.dump(state, f, indent=2)
 
 
-def get_repos_from_org(org, token):
-    """Return a list of repo full_names for an organization.
-
-    If the provided token cannot access the org (e.g. token restricted or SSO enforced),
-    fall back to an unauthenticated request to list public repos only.
-    """
+def _paginate_repos(url, headers, repo_type):
+    """Fetch paginated repositories for the given endpoint."""
     repos = []
     page = 1
-    # Prepare headers: include Authorization only if token provided
-    headers = {"Accept": "application/vnd.github+json"}
-    if token:
-        headers_auth = {**headers, "Authorization": f"token {token}"}
-    else:
-        headers_auth = headers
-
     while True:
-        try:
-            r = requests.get(f"{GITHUB_API}/orgs/{org}/repos", headers=headers_auth, params={"per_page": 100, "page": page, "type": "all"})
-            r.raise_for_status()
-        except requests.HTTPError as e:
-            # If auth'd request returned 404 we try unauthenticated public listing as a fallback
-            status = getattr(e.response, "status_code", None)
-            if status == 404:
-                print(f"Warning: org '{org}' not accessible with provided token. Falling back to unauthenticated public repo listing.")
-                # Retry unauthenticated for public repos only
-                r = requests.get(f"{GITHUB_API}/orgs/{org}/repos", params={"per_page": 100, "page": page, "type": "public"})
-                r.raise_for_status()
-            else:
-                raise
-
+        params = {"per_page": 100, "page": page}
+        if repo_type:
+            params["type"] = repo_type
+        r = requests.get(url, headers=headers, params=params)
+        r.raise_for_status()
         data = r.json()
         if not data:
             break
@@ -75,6 +55,79 @@ def get_repos_from_org(org, token):
             repos.append(repo["full_name"])
         page += 1
     return repos
+
+
+def get_repos_from_org(org, token):
+    """Return a list of repo full_names for an organization or user.
+
+    Historically we only supported organisations. GitHub returns a 404 when the
+    authenticated user cannot access the organisation (e.g. missing SSO) or when
+    the name actually refers to a personal account. To make the action more
+    forgiving we retry without authentication for public repos, and if that still
+    fails we look up the name as a user account instead.
+    """
+
+    headers_base = {"Accept": "application/vnd.github+json"}
+    headers_auth = {**headers_base, "Authorization": f"token {token}"} if token else None
+
+    attempts = []
+
+    # Start with organisation endpoints (authenticated then unauthenticated).
+    if headers_auth:
+        attempts.append(("org", headers_auth, "all", f"{GITHUB_API}/orgs/{org}/repos"))
+    attempts.append(("org", headers_base, "public", f"{GITHUB_API}/orgs/{org}/repos"))
+
+    # Then try treating the name as a user.
+    if headers_auth:
+        attempts.append(("user", headers_auth, "owner", f"{GITHUB_API}/users/{org}/repos"))
+    attempts.append(("user", headers_base, "owner", f"{GITHUB_API}/users/{org}/repos"))
+
+    last_error = None
+
+    for scope, headers, repo_type, url in attempts:
+        try:
+            repos = _paginate_repos(url, headers, repo_type)
+            if scope == "org" and headers is headers_base and headers_auth:
+                print(
+                    f"Warning: org '{org}' not accessible with provided token. "
+                    "Falling back to unauthenticated public repo listing."
+                )
+            if scope == "user" and last_error == "org_not_found":
+                print(f"Info: '{org}' does not look like an organisation. Using user repositories instead.")
+            return repos
+        except requests.HTTPError as e:
+            status = getattr(e.response, "status_code", None)
+            if status == 404:
+                if scope == "org":
+                    if headers is headers_auth:
+                        # Try unauthenticated before assuming it's not an org.
+                        continue
+                    last_error = "org_not_found"
+                    continue
+                elif scope == "user":
+                    if headers is headers_auth:
+                        print(
+                            f"Warning: user '{org}' not accessible with provided token. "
+                            "Falling back to unauthenticated listing."
+                        )
+                        continue
+                    last_error = "user_not_found"
+                    continue
+            raise
+
+    if last_error == "org_not_found":
+        raise SystemExit(f"Unable to find organisation or user named '{org}'.")
+
+    if last_error == "user_not_found":
+        raise SystemExit(f"Unable to find user named '{org}'.")
+
+    # If we get here we exhausted authenticated attempts (likely 403) - bubble up.
+    if headers_auth:
+        raise SystemExit(
+            "Unable to list repositories with the provided token. "
+            "Check that it has access to the organisation or user."
+        )
+    raise SystemExit("Unable to list repositories from GitHub.")
 
 
 def list_commits(owner_repo, token, since=None):
