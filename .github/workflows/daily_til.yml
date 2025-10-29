@@ -1,59 +1,59 @@
-# name: "Daily TIL Generation"
+name: "Daily TIL Generation"
 
-# on:
-#   schedule:
-#     - cron: '0 0 * * *' # UTC midnight daily
+on:
+  schedule:
+    - cron: '0 0 * * *' # UTC midnight daily
 
-# jobs:
-#   generate-til:
-#     runs-on: ubuntu-latest
+jobs:
+  generate-til:
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v3
-#         with:
-#           persist-credentials: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v4
-#         with:
-#           python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-#       - name: Install dependencies
-#         run: pip install --upgrade pip && pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install --upgrade pip && pip install -r requirements.txt
 
-#       - name: Copy config template if missing
-#         run: |
-#           if [ ! -f config.yml ]; then
-#             cp config.yml.template config.yml
-#           fi
+      - name: Copy config template if missing
+        run: |
+          if [ ! -f config.yml ]; then
+            cp config.yml.template config.yml
+          fi
 
-#       - name: Run TIL blog generator
-#         env:
-#           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-#         run: python -m til_blog.main --config config.yml
+      - name: Run TIL blog generator
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python -m til_blog.main --config config.yml
 
-#       - name: Commit and push generated posts
-#         run: |
-#           git config user.name "github-actions[bot]"
-#           git config user.email "github-actions[bot]@users.noreply.github.com"
-#           git add site/content/posts state.json
-#           git commit -m "chore: daily TIL posts [skip ci]" || echo "No changes"
-#           git push
+      - name: Commit and push generated posts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add site/content/posts state.json
+          git commit -m "chore: daily TIL posts [skip ci]" || echo "No changes"
+          git push
 
-#       - name: Setup Hugo
-#         uses: peaceiris/actions-hugo@v2
-#         with:
-#           hugo-version: 'latest'
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: 'latest'
 
-#       - name: Build Hugo site
-#         run: hugo --source site --destination site/public
+      - name: Build Hugo site
+        run: hugo mod get && hugo --source site --destination site/public
 
-#       - name: Deploy to GitHub Pages
-#         uses: peaceiris/actions-gh-pages@v3
-#         with:
-#           publish_dir: site/public
-#           publish_branch: gh-pages
-#           user_name: github-actions[bot]
-#           user_email: github-actions[bot]@users.noreply.github.com
-#           commit_message: 'chore: deploy site [skip ci]'
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: site/public
+          publish_branch: gh-pages
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+          commit_message: 'chore: deploy site [skip ci]'
