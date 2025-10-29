@@ -2,28 +2,57 @@
 
 from __future__ import annotations
 
-from typing import List
+import os
+
+from collections import defaultdict
+from typing import Any, Dict, Iterable, List
 
 from openai import OpenAI
 
 
 class Summarizer:
-    def __init__(self, api_key):
-        self.client = OpenAI(api_key=api_key)
+    """Summarize commit history, falling back when OpenAI is unavailable."""
+
+    def __init__(self, api_key: str | None):
+        self._api_key = api_key or ""
+        self.client = None
+        if self._is_valid_api_key(self._api_key):
+            self.client = OpenAI(api_key=self._api_key)
+
+    @staticmethod
+    def _is_valid_api_key(api_key: str) -> bool:
+        """Return True if the key looks real (not empty or masked)."""
+
+        if not api_key:
+            return False
+
+        # GitHub Actions masks secrets with **** in logs; sometimes users provide
+        # placeholders like "***" when testing locally. Treat all-star strings as
+        # "not configured" so we can skip OpenAI usage gracefully.
+        if api_key.strip("*") == "":
+            return False
+
+        return True
 
     def summarize(self, commits: List[dict]) -> str:
-        """
-        Summarize a list of commit dicts (from GitHub API) into a concise TIL entry using OpenAI.
-        Expected commit dict shape: {"repo": "owner/repo", "sha": "...", "message": "...", "files": [{"filename": "..", "patch": "..."}, ...]}
-        """
+        """Summarize commits with OpenAI, or fall back to a basic digest."""
+
         if not commits:
             return ""
+
+        normalized_commits = [self._normalise_commit(c) for c in commits]
+
+        if not self.client:
+            return self._fallback_summary(
+                normalized_commits,
+                "Summarization skipped because no OpenAI API key was configured.",
+            )
 
         prompt_sections: List[str] = [
             "You are a helpful assistant. Summarize the following code commits into a concise 'Today I Learned' (TIL) entry. For each commit, include the repo, commit message, and a brief summary of changed files. Keep the final output short and suitable as a Markdown blog post.",
         ]
 
-        for c in commits:
+        for c in normalized_commits:
             repo = c.get("repo") or ""
             sha = c.get("sha") or ""
             msg = (c.get("message") or "").strip()
@@ -46,12 +75,21 @@ class Summarizer:
         prompt = "\n\n".join(prompt_sections)
 
         # Use the model requested by the user (gpt-5-mini)
-        response = self.client.responses.create(
-            model="gpt-5-mini",
-            input=prompt,
-            max_output_tokens=400,
-            temperature=0.3,
-        )
+        try:
+            response = self.client.responses.create(
+                model="gpt-5-mini",
+                input=prompt,
+                max_output_tokens=400,
+                temperature=0.3,
+            )
+        except Exception as exc:  # pragma: no cover - print path exercised in action
+            print(
+                f"Warning: OpenAI summarization failed ({exc}). Falling back to commit message summary.",
+            )
+            return self._fallback_summary(
+                normalized_commits,
+                "Summarization failed; listing commit messages instead.",
+            )
 
         return self._extract_text(response)
 
@@ -81,3 +119,50 @@ class Summarizer:
                 chunks.append(getattr(item, "text", ""))
 
         return "".join(chunks).strip()
+
+    @staticmethod
+    def _fallback_summary(commits: Iterable[Dict[str, Any]], reason: str) -> str:
+        """Return a simple Markdown list of commits when AI summarisation is unavailable."""
+
+        grouped: Dict[str, List[str]] = defaultdict(list)
+        for commit in commits:
+            repo = commit.get("repo") or "unknown-repo"
+            sha = (commit.get("sha") or "")[:7]
+            message = (commit.get("message") or "").strip()
+            first_line = message.splitlines()[0] if message else "(no commit message)"
+            bullet = f"- {sha} {first_line}".strip()
+            grouped[repo].append(bullet)
+
+        lines: List[str] = ["### Today's commits", "", reason, ""]
+
+        for repo, entries in grouped.items():
+            lines.append(f"#### {repo}")
+            lines.extend(entries)
+            lines.append("")
+
+        return "\n".join(lines).rstrip()
+
+    @staticmethod
+    def _normalise_commit(commit: Any) -> Dict[str, Any]:
+        """Coerce commit objects from different sources into a dict form."""
+
+        if isinstance(commit, dict):
+            return {
+                "repo": commit.get("repo"),
+                "sha": commit.get("sha"),
+                "message": commit.get("message"),
+                "files": commit.get("files") or [],
+            }
+
+        sha = getattr(commit, "hexsha", "")
+        message = getattr(commit, "message", "")
+        repo_name = getattr(commit, "repo_name", "")
+
+        if not repo_name:
+            repo = getattr(commit, "repo", None)
+            if repo is not None:
+                repo_path = getattr(repo, "working_tree_dir", "") or getattr(repo, "common_dir", "")
+                if repo_path:
+                    repo_name = os.path.basename(repo_path.rstrip(os.sep)) or repo_path
+
+        return {"repo": repo_name, "sha": sha, "message": message, "files": []}
