@@ -1,11 +1,18 @@
-repos:
-  - /path/to/repo1
-  - /path/to/repo2
+# Option A: List individual GitHub repos (full_name format: owner/repo)
+# github_repos:
+#   - ctxzz-ai/repo1
+#   - ctxzz-ai/repo2
+
+# Option B: Poll all repos in an org
+# github_org: ctxzz-ai
+
 output_dir: site/content/posts
 state_file: state.json
-# OPENAI_API_KEY should be set as environment variable
+# Set OPENAI_API_KEY and GH_PAT (or GITHUB_TOKEN) as environment variables in GitHub Actions
+# Example: GH_PAT should have permission to read the target repos; to push back to this repo it also needs write access
+
 # Hugo site configuration
 site_dir: site
 theme: ananke
 # Update baseURL to your site URL
-baseURL: https://example.com/
+baseURL: https://ctxzz-ai.github.io/til-blog/
