@@ -37,9 +37,8 @@ class Summarizer:
                     if patch:
                         # Truncate long patches to avoid token overuse
                         snippet = patch if len(patch) <= 1200 else patch[:1200] + "\n...[truncated]"
-                        file_lines.append(f"- {fn}:\n```
-{snippet}
-```")
+                        # Use tildes for fenced code block to avoid embedding backticks in source
+                        file_lines.append(f"- {fn}:\n~~~\n{snippet}\n~~~")
                     else:
                         file_lines.append(f"- {fn}: (no patch available)")
                 prompt_sections.append("\n".join(file_lines))
