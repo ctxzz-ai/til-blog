@@ -38,9 +38,10 @@ jobs:
 
       - name: Commit and push generated posts
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add site/content/posts state.json
+          git config user.name "ctxzz-ai"
+          git config user.email "ctxzz-ai@users.noreply.github.com"
+          git add site/content/posts
+          git add -f state.json
           git commit -m "chore: daily TIL posts [skip ci]" || echo "No changes"
           git push
 
