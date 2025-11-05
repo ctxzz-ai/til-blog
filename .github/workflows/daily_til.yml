@@ -43,6 +43,7 @@ jobs:
           git add site/content/posts
           git add -f state.json
           git commit -m "chore: daily TIL posts [skip ci]" || echo "No changes"
+          git pull --rebase origin "$GITHUB_REF_NAME"
           git push
 
       - name: Setup Hugo

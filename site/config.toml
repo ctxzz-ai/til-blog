@@ -5,4 +5,4 @@ theme = "ananke"
 
 [module]
   [[module.imports]]
-    path = "github.com/theNewDynamic/gohugo-theme-ananke"
+    path = "github.com/theNewDynamic/gohugo-theme-ananke/v4"
