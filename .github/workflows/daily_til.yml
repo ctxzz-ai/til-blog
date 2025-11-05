@@ -43,6 +43,7 @@ jobs:
           git add site/content/posts
           git add -f state.json
           git commit -m "chore: daily TIL posts [skip ci]" || echo "No changes"
+          git pull --rebase origin "$GITHUB_REF_NAME"
           git push
 
       - name: Setup Hugo
@@ -51,7 +52,10 @@ jobs:
           hugo-version: 'latest'
 
       - name: Build Hugo site
-        run: hugo mod get && hugo --source site --destination site/public
+        run: |
+          cd site
+          hugo mod get
+          hugo --destination public
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
