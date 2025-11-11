@@ -1,8 +1,8 @@
 baseURL = "https://ctxzz-ai.github.io/til-blog/"
 languageCode = "en-us"
 title = "TIL Blog"
-theme = "ananke"
+theme = ["github.com/theNewDynamic/gohugo-theme-ananke"]
 
 [module]
   [[module.imports]]
-    path = "github.com/theNewDynamic/gohugo-theme-ananke/v2"
+    path = "github.com/theNewDynamic/gohugo-theme-ananke"
