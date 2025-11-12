@@ -1,0 +1,14 @@
+{{ define "main" }}
+  <section class="post-list home">
+    <h1>{{ .Site.Title }}</h1>
+    {{ range .Site.RegularPages.ByDate.Reverse }}
+      <article class="post-item">
+        <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+        {{ with .Date }}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format (.Site.Params.dateFormat | default "Jan 2, 2006") }}</time>{{ end }}
+        {{ with .Summary }}<p>{{ . | plainify }}</p>{{ end }}
+      </article>
+    {{ else }}
+      <p>No posts yet.</p>
+    {{ end }}
+  </section>
+{{ end }}

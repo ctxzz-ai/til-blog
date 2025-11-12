@@ -1,0 +1,17 @@
+{{ define "main" }}
+  <section class="post-list">
+    <h1>{{ .Title }}</h1>
+    {{ if .Paginator.Pages }}
+      {{ range .Paginator.Pages }}
+        <article class="post-item">
+          <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+          {{ with .Date }}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format (.Site.Params.dateFormat | default "Jan 2, 2006") }}</time>{{ end }}
+          {{ with .Summary }}<p>{{ . | plainify }}</p>{{ end }}
+        </article>
+      {{ end }}
+      {{ template "_internal/pagination.html" . }}
+    {{ else }}
+      <p>No posts yet.</p>
+    {{ end }}
+  </section>
+{{ end }}
