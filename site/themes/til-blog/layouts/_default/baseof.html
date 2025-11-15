@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="{{ or .Site.Language.Lang "en" }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ block "title" . }}{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}{{ end }}</title>
+    {{ with .Description }}<meta name="description" content="{{ . }}">{{ end }}
+    <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
+    {{ block "extra_head" . }}{{ end }}
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <a class="site-title" href="{{ "/" | relURL }}">{{ .Site.Title }}</a>
+        {{ with .Site.Params.tagline }}<p class="site-tagline">{{ . }}</p>{{ end }}
+      </div>
+    </header>
+    <main class="site-main container">
+      {{ block "main" . }}{{ end }}
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        <p>&copy; {{ now.Year }} {{ .Site.Title }}</p>
+      </div>
+    </footer>
+  </body>
+</html>
