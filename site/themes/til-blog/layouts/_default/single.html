@@ -1,0 +1,12 @@
+{{ define "main" }}
+  <article class="post">
+    <header class="post-header">
+      <h1>{{ .Title }}</h1>
+      {{ $dateFormat := site.Params.dateFormat | default "Jan 2, 2006" }}
+      {{ with .Date }}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format $dateFormat }}</time>{{ end }}
+    </header>
+    <div class="post-content">
+      {{ .Content }}
+    </div>
+  </article>
+{{ end }}
