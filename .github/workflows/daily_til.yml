@@ -62,6 +62,7 @@ jobs:
         with:
           publish_dir: site/public
           publish_branch: gh-pages
+          personal_token: ${{ secrets.GH_PAT }}
           user_name: github-actions[bot]
           user_email: github-actions[bot]@users.noreply.github.com
           commit_message: 'chore: deploy site [skip ci]'
