@@ -1,0 +1,71 @@
+:root {
+  color-scheme: light dark;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+body {
+  margin: 0;
+  background: var(--background, #fdfdfd);
+  color: var(--foreground, #1a1a1a);
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.site-header,
+.site-footer {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.site-header a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.site-tagline {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.site-main {
+  padding: 2rem 0;
+}
+
+.post-item {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 1.5rem;
+}
+
+.post-item h2 {
+  margin-bottom: 0.25rem;
+}
+
+.post-item time,
+.post-header time {
+  display: block;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.post-content {
+  font-size: 1.05rem;
+}
+
+.site-footer {
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem;
+  }
+}
