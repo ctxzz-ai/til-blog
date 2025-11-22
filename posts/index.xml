@@ -6,14 +6,21 @@
     <description>Recent content in Posts on TIL Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 21 Nov 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 22 Nov 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://ctxzz-ai.github.io/til-blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2025-11-22 - Today I Learned</title>
+      <link>https://ctxzz-ai.github.io/til-blog/posts/2025-11-22/</link>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>https://ctxzz-ai.github.io/til-blog/posts/2025-11-22/</guid>
+      <description></description>
+    </item>
     <item>
       <title>2025-11-21 - Today I Learned</title>
       <link>https://ctxzz-ai.github.io/til-blog/posts/2025-11-21/</link>
       <pubDate>Fri, 21 Nov 2025 00:00:00 +0000</pubDate>
       <guid>https://ctxzz-ai.github.io/til-blog/posts/2025-11-21/</guid>
-      <description></description>
+      <description>&lt;h3 id=&#34;todays-commits&#34;&gt;Today&amp;rsquo;s commits&lt;/h3&gt;&#xA;&lt;p&gt;Summarization failed; listing commit messages instead.&lt;/p&gt;&#xA;&lt;h4 id=&#34;ctxzz-aitil-blog&#34;&gt;ctxzz-ai/til-blog&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;a7b7e18 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;0aa6da5 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;da18c1d chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;2974e29 Access site params via global context&lt;/li&gt;&#xA;&lt;li&gt;e9f6291 Merge branch &amp;lsquo;main&amp;rsquo; into codex/fix-github-action-module-loading-error&lt;/li&gt;&#xA;&lt;li&gt;d40122e Merge pull request #17 from ctxzz-ai/codex/fix-github-action-module-loading-error&lt;/li&gt;&#xA;&lt;li&gt;f6f3cc8 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;bf52878 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;37c12bb chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;d926fb3 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;650a6df chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;96395b1 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;1e72830 Configure gh-pages deploy token&lt;/li&gt;&#xA;&lt;li&gt;06fea6c Merge pull request #18 from ctxzz-ai/codex/fix-github-action-module-loading-error&lt;/li&gt;&#xA;&lt;li&gt;b1a2143 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;be90c19 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;9ee0ae1 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;865ae75 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;8c35c6e chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
     <item>
       <title>2025-11-20 - Today I Learned</title>
