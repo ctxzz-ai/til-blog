@@ -6,14 +6,21 @@
     <description>Recent content on TIL Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 18 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 19 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://ctxzz-ai.github.io/til-blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2026-02-19 - Today I Learned</title>
+      <link>https://ctxzz-ai.github.io/til-blog/posts/2026-02-19/</link>
+      <pubDate>Thu, 19 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://ctxzz-ai.github.io/til-blog/posts/2026-02-19/</guid>
+      <description></description>
+    </item>
     <item>
       <title>2026-02-18 - Today I Learned</title>
       <link>https://ctxzz-ai.github.io/til-blog/posts/2026-02-18/</link>
       <pubDate>Wed, 18 Feb 2026 00:00:00 +0000</pubDate>
       <guid>https://ctxzz-ai.github.io/til-blog/posts/2026-02-18/</guid>
-      <description></description>
+      <description>&lt;h3 id=&#34;todays-commits&#34;&gt;Today&amp;rsquo;s commits&lt;/h3&gt;&#xA;&lt;p&gt;Summarization failed; listing commit messages instead.&lt;/p&gt;&#xA;&lt;h4 id=&#34;ctxzz-aiportfolio&#34;&gt;ctxzz-ai/portfolio&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;5936083 Add 10 new WebGL/Three.js works to the portfolio.&lt;/li&gt;&#xA;&lt;li&gt;80e9459 Merge pull request #6 from ctxzz-ai/add-10-new-works-17930508026593428558&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h4 id=&#34;ctxzz-aitil-blog&#34;&gt;ctxzz-ai/til-blog&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;e319f78 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;66f1d12 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;b5cb09f chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;048ea32 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;20281f9 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;07f9b22 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;8a254ef chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;d767c76 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;1ac9121 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;57ab77b chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;2b56c71 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
     <item>
       <title>2026-02-17 - Today I Learned</title>
