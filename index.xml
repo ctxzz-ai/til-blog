@@ -6,14 +6,21 @@
     <description>Recent content on TIL Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 01 May 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 02 May 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://ctxzz-ai.github.io/til-blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2026-05-02 - Today I Learned</title>
+      <link>https://ctxzz-ai.github.io/til-blog/posts/2026-05-02/</link>
+      <pubDate>Sat, 02 May 2026 00:00:00 +0000</pubDate>
+      <guid>https://ctxzz-ai.github.io/til-blog/posts/2026-05-02/</guid>
+      <description></description>
+    </item>
     <item>
       <title>2026-05-01 - Today I Learned</title>
       <link>https://ctxzz-ai.github.io/til-blog/posts/2026-05-01/</link>
       <pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
       <guid>https://ctxzz-ai.github.io/til-blog/posts/2026-05-01/</guid>
-      <description></description>
+      <description>&lt;h3 id=&#34;todays-commits&#34;&gt;Today&amp;rsquo;s commits&lt;/h3&gt;&#xA;&lt;p&gt;Summarization failed; listing commit messages instead.&lt;/p&gt;&#xA;&lt;h4 id=&#34;ctxzz-aitil-blog&#34;&gt;ctxzz-ai/til-blog&lt;/h4&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;e68cd5e chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;cbfed73 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;ba05879 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;3ca5471 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;07ca9b1 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;52b8376 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;333e8d9 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;523ca2d chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;5843121 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;1a3de32 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;3a217e2 chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;li&gt;f35fd15 chore: add daily TIL posts&lt;/li&gt;&#xA;&lt;li&gt;51e7e6f chore: daily TIL posts [skip ci]&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
     <item>
       <title>2026-04-30 - Today I Learned</title>
